@@ -13,7 +13,12 @@ import { fileURLToPath } from 'url';
 
 app.use(cors());
 
-let CURRENT_VOTING_SESSION_ID = 1;
+const getlastVotingSessionId = async () => {
+	const [rows] = await db.query('SELECT MAX(id) AS id FROM tulemused');
+	return rows[0].id;
+};
+
+let CURRENT_VOTING_SESSION_ID = getlastVotingSessionId();
 
 app.get('/api/request-users', (req, res) => {
 	db.query('SELECT * FROM haaletus')

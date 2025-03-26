@@ -5,7 +5,7 @@ import './App.css';
 import ConfigContainer from './components/ConfigContainer';
 import VoteContainer from './components/VoteContainer';
 
-const VotingTime = 1 * 10000;
+const VotingTime = 5 * 60000;
 
 const App = () => {
 	const [positiveVotes, setPositiveVotes] = useState(0);

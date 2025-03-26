@@ -1,0 +1,31 @@
+/* Custom Dark Scrollbar */
+
+/* For Webkit browsers (Chrome, Safari, newer Edge) */
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: #1e1e1e;
+	border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #555;
+	border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #777;
+}
+
+::-webkit-scrollbar-corner {
+	background: #1e1e1e;
+}
+
+/* For Firefox */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: #555 #1e1e1e;
+}

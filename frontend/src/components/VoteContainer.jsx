@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 
+import './VoteContainer.css';
+
 const VotingContainer = ({ handleVotes, votingStarted }) => {
 	const [users, setUsers] = useState([]);
 
@@ -68,8 +70,8 @@ const VotingContainer = ({ handleVotes, votingStarted }) => {
 				</div>
 			) : (
 				<div className='flex flex-col items-center justify-center h-full p-4'>
-					<div className='w-full max-w-4xl bg-neutral-700  shadow-lg overflow-hidden border-2 border-neutral-900 rounded-md'>
-						<table className='w-full border-collapse'>
+					<div className='w-full max-w-4xl bg-neutral-700  shadow-lg overflow-auto  border-2 border-neutral-900 rounded-md'>
+						<table className='w-full border-collapse '>
 							<thead>
 								<tr className='bg-neutral-800'>
 									<th className='text-center p-4 text-xl font-bold text-white border-b-2 border-neutral-600'>
