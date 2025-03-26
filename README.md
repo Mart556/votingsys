@@ -17,3 +17,15 @@ DB_NAME=<votingsys>
 DB_PASSWORD=<qwerty>
 
 ```
+
+## How to start development server
+
+Need pnpm package mananger
+
+Install db.sql
+
+cd frontend
+pnpm dev
+
+cd backend
+pnpm dev
