@@ -48,6 +48,25 @@ const App = () => {
 	};
 
 	useEffect(() => {
+		fetch('api/voting-started', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				votingStarted: votingStarted,
+			}),
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				if (data.success) {
+					console.log('Voting session created:', data.id);
+				}
+			})
+			.catch((err) => {
+				console.error('Error updating vote:', err);
+			});
+
 		let timerInterval = null;
 
 		if (votingStarted) {
@@ -60,9 +79,9 @@ const App = () => {
 					if (prevTime <= 1) {
 						clearInterval(timerInterval);
 						setVotingStarted(false);
-						handleVotingEnd();
 						return 0;
 					}
+
 					return prevTime - 1;
 				});
 			}, 1000);

@@ -4,16 +4,17 @@ const VotingContainer = ({ handleVotes, votingStarted }) => {
 	const [users, setUsers] = useState([]);
 
 	useEffect(() => {
-		// TODO Fetch users from backend
-
 		if (votingStarted) {
-			setUsers([
-				{ firstname: 'John', lastname: 'Doe', vote: null },
-				{ firstname: 'Jane', lastname: 'Smith', vote: null },
-				{ firstname: 'David', lastname: 'Johnson', vote: null },
-				{ firstname: 'Maria', lastname: 'Garcia', vote: null },
-				{ firstname: 'Robert', lastname: 'Wilson', vote: null },
-			]);
+			fetch('/api/request-users')
+				.then((res) => res.json())
+				.then((data) => {
+					if (votingStarted && data.users) {
+						setUsers(data.users);
+					}
+				})
+				.catch((err) => {
+					console.error('Error fetching users:', err);
+				});
 		} else {
 			setUsers([]);
 		}
@@ -34,7 +35,27 @@ const VotingContainer = ({ handleVotes, votingStarted }) => {
 		if (newVote === 1) handleVotes('positive', 1);
 		if (newVote === 0) handleVotes('negative', 1);
 
-		// TODO Send vote to backend
+		fetch('/api/vote', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				id: updatedUsers[index].id,
+				vote: newVote,
+			}),
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				if (!data.success) {
+					console.error('Failed to update vote');
+				}
+
+				console.log('Vote updated successfully');
+			})
+			.catch((err) => {
+				console.error('Error updating vote:', err);
+			});
 	};
 
 	return (
