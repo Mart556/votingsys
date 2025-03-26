@@ -24,7 +24,7 @@ const App = () => {
 		}
 	};
 
-	const [votingStarted, setVotingStarted] = useState(false);
+	const [votingStarted, setVotingStarted] = useState(null);
 	const [timer, setTimer] = useState(VotingTime / 1000);
 
 	const [entTime, setEndTime] = useState(new Date().getTime() + VotingTime);
@@ -33,44 +33,46 @@ const App = () => {
 		setVotingStarted(!votingStarted);
 	};
 
-	const votingEnded = () => {
-		setVotingStarted(false);
-
+	const handleVotingEnd = () => {
+		// Cache current votes
 		const positive = positiveVotes;
 		const negative = negativeVotes;
 
+		// Reset votes
 		setPositiveVotes(0);
 		setNegativeVotes(0);
-
 		setEndTime(new Date().getTime());
 
-		alert(`Positiivseid: ${positive}\nNegatiivseid: ${negative}`);
+		// Display results
+		alert(`Voting Results\nPositive: ${positive}\nNegative: ${negative}`);
 	};
 
 	useEffect(() => {
-		let interval = null;
+		let timerInterval = null;
 
 		if (votingStarted) {
+			// Start new voting session
 			setTimer(VotingTime / 1000);
+			setEndTime(new Date().getTime() + VotingTime);
 
-			interval = setInterval(() => {
-				setTimer((prev) => {
-					if (prev <= 1) {
-						clearInterval(interval);
-
+			timerInterval = setInterval(() => {
+				setTimer((prevTime) => {
+					if (prevTime <= 1) {
+						clearInterval(timerInterval);
+						setVotingStarted(false);
+						handleVotingEnd();
 						return 0;
 					}
-					return prev - 1;
+					return prevTime - 1;
 				});
 			}, 1000);
-
-			setEndTime(new Date().getTime() + VotingTime);
-		} else {
+		} else if (votingStarted === false) {
 			setTimer(0);
+			handleVotingEnd();
 		}
 
 		return () => {
-			if (interval) clearInterval(interval);
+			if (timerInterval) clearInterval(timerInterval);
 		};
 	}, [votingStarted]);
 
