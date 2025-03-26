@@ -1,4 +1,40 @@
-const VotingContainer = ({ setNegativeVote, setPositiveVote }) => {
+import { useEffect, useState } from 'react';
+
+const VotingContainer = ({ handleVotes, votingStarted }) => {
+	const [users, setUsers] = useState([]);
+
+	useEffect(() => {
+		// TODO Fetch users from backend
+
+		if (votingStarted) {
+			setUsers([
+				{ firstname: 'John', lastname: 'Doe', vote: null },
+				{ firstname: 'Jane', lastname: 'Smith', vote: null },
+				{ firstname: 'David', lastname: 'Johnson', vote: null },
+				{ firstname: 'Maria', lastname: 'Garcia', vote: null },
+				{ firstname: 'Robert', lastname: 'Wilson', vote: null },
+			]);
+		} else {
+			setUsers([]);
+		}
+	}, [votingStarted]);
+
+	const handleVote = (index, newVote) => {
+		const updatedUsers = [...users];
+		const previousVote = updatedUsers[index].vote;
+
+		if (previousVote !== null) {
+			if (previousVote === 1) handleVotes('positive', -1);
+			if (previousVote === 0) handleVotes('negative', -1);
+		}
+
+		updatedUsers[index].vote = newVote;
+		setUsers(updatedUsers);
+
+		if (newVote === 1) handleVotes('positive', 1);
+		if (newVote === 0) handleVotes('negative', 1);
+	};
+
 	return (
 		<div className='voting-container w-full bg-neutral-800 h-full'>
 			<div className='flex flex-col items-center justify-center h-full p-4'>
@@ -15,13 +51,7 @@ const VotingContainer = ({ setNegativeVote, setPositiveVote }) => {
 							</tr>
 						</thead>
 						<tbody>
-							{[
-								'John Doe',
-								'Jane Smith',
-								'David Johnson',
-								'Maria Garcia',
-								'Robert Wilson',
-							].map((name, index) => (
+							{users.map((user, index) => (
 								<tr
 									key={index}
 									className={
@@ -31,19 +61,25 @@ const VotingContainer = ({ setNegativeVote, setPositiveVote }) => {
 									}
 								>
 									<td className='p-4 text-lg font-medium text-center text-white border-b border-neutral-600'>
-										{name}
+										{user.firstname} {user.lastname}
 									</td>
 									<td className='p-4 border-b border-neutral-600'>
 										<div className='flex gap-4 justify-center'>
 											<button
-												onClick={setPositiveVote}
-												className='px-4 py-2 bg-green-600 text-white rounded-md font-medium hover:bg-green-700 transition duration-200 cursor-pointer'
+												onClick={() =>
+													handleVote(index, 1)
+												}
+												disabled={user.vote === 1}
+												className='px-4 py-2 bg-green-600 text-white rounded-md font-medium hover:bg-green-700 transition duration-200 cursor-pointer disabled:opacity-50'
 											>
 												Davs.
 											</button>
 											<button
-												onClick={setNegativeVote}
-												className='px-4 py-2 bg-red-600 text-white rounded-md font-medium hover:bg-red-700 transition duration-200 cursor-pointer'
+												onClick={() =>
+													handleVote(index, 0)
+												}
+												disabled={user.vote === 0}
+												className='px-4 py-2 bg-red-600 text-white rounded-md font-medium hover:bg-red-700 transition duration-200 cursor-pointer disabled:opacity-50'
 											>
 												Nope.
 											</button>

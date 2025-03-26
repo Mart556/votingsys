@@ -5,18 +5,23 @@ import './App.css';
 import ConfigContainer from './components/ConfigContainer';
 import VoteContainer from './components/VoteContainer';
 
-const VotingTime = 5 * 60000;
+const VotingTime = 1 * 10000;
 
 const App = () => {
 	const [positiveVotes, setPositiveVotes] = useState(0);
 	const [negativeVotes, setNegativeVotes] = useState(0);
 
-	const handlePositiveVote = () => {
-		setPositiveVotes(positiveVotes + 1);
-	};
-
-	const handleNegativeVote = () => {
-		setNegativeVotes(negativeVotes + 1);
+	const handleVotes = (type, amount) => {
+		switch (type) {
+			case 'positive':
+				setPositiveVotes((prev) => prev + amount);
+				break;
+			case 'negative':
+				setNegativeVotes((prev) => prev + amount);
+				break;
+			default:
+				break;
+		}
 	};
 
 	const [votingStarted, setVotingStarted] = useState(false);
@@ -26,6 +31,20 @@ const App = () => {
 
 	const handleVoting = () => {
 		setVotingStarted(!votingStarted);
+	};
+
+	const votingEnded = () => {
+		setVotingStarted(false);
+
+		const positive = positiveVotes;
+		const negative = negativeVotes;
+
+		setPositiveVotes(0);
+		setNegativeVotes(0);
+
+		setEndTime(new Date().getTime());
+
+		alert(`Positiivseid: ${positive}\nNegatiivseid: ${negative}`);
 	};
 
 	useEffect(() => {
@@ -38,6 +57,7 @@ const App = () => {
 				setTimer((prev) => {
 					if (prev <= 1) {
 						clearInterval(interval);
+
 						return 0;
 					}
 					return prev - 1;
@@ -47,7 +67,6 @@ const App = () => {
 			setEndTime(new Date().getTime() + VotingTime);
 		} else {
 			setTimer(0);
-			setEndTime(new Date().getTime());
 		}
 
 		return () => {
@@ -72,8 +91,8 @@ const App = () => {
 				endTime={entTime}
 			/>
 			<VoteContainer
-				setNegativeVote={handleNegativeVote}
-				setPositiveVote={handlePositiveVote}
+				handleVotes={handleVotes}
+				votingStarted={votingStarted}
 			/>
 		</div>
 	);
